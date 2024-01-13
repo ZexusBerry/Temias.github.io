@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>заказ Roblox</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+         .error-message {
+            color: #ff0000;
+            font-size: 12px;
+            margin-top: -8px;
+        }
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #header {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Добавленные стили для разделителя */
+        #divider {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<form>
+    <!-- Добавлен заголовок и разделитель -->
+    <div id="header">JavaScript</div>
+    <div id="divider"></div>
+
+    <!-- Продолжение кода формы как обычно -->
+    <label for="platform">Выберите платформу:</label>
+    <select id="platform" name="platform" required>
+        <option value="telegram">Telegram</option>
+        <option value="discord">Discord</option>
+    </select>
+
+    <label for="name">Имя:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="nickname">Ник:</label>
+    <input type="text" id="nickname" name="nickname" required>
+
+    <label for="budget">Бюджет:</label>
+    <input type="number" id="budget" name="budget" min="0" required>
+    <span class="error-message" id="budget-error"></span>
+
+    <label for="currency">Выберите валюту:</label>
+    <select id="currency" name="currency" required>
+        <option value="RUB">RUB</option>
+        <option value="USD">USD</option>
+        <option value="UAH">UAH</option>
+        <option value="EURO">EURO</option>
+        <option value="BYN">BYN</option>
+    </select>
+
+    <button type="button" onclick="submitForm()">Отправить заказ</button>
+
+    <!-- Элемент для отображения анимации загрузки -->
+    <div id="loading">Загрузка...</div>
+</form>
+
+<script>
+    function submitForm() {
+        var platform = document.getElementById('platform').value;
+        var name = document.getElementById('name').value;
+        var nickname = document.getElementById('nickname').value;
+        var budget = document.getElementById('budget').value;
+        var currency = document.getElementById('currency').value;
+
+        // Валидация бюджета
+        var budgetInput = document.getElementById('budget');
+        var budgetError = document.getElementById('budget-error');
+        if (isNaN(budget) || budget < 0) {
+            budgetError.textContent = "Бюджет должен быть положительным числом.";
+            budgetInput.classList.add('error');
+            return;
+        } else {
+            budgetError.textContent = "";
+            budgetInput.classList.remove('error');
+        }
+
+        // Проверка заполнения всех обязательных полей
+        if (!platform || !name || !nickname || !budget || !currency) {
+            alert("Пожалуйста, заполните все обязательные поля.");
+            return;
+        }
+
+        // Отображение анимации загрузки
+        var loadingDiv = document.getElementById('loading');
+        loadingDiv.style.display = 'block';
+
+        // Симуляция задержки в 2 секунды перед отображением сообщения "Готово"
+        setTimeout(function() {
+            // Скрытие анимации загрузки
+            loadingDiv.style.display = 'none';
+
+            // Вместо этого вы можете выполнить дополнительные действия в зависимости от введенных данных
+
+            // Просто для примера, выводим в консоль
+            console.log("Платформа: " + platform);
+            console.log("Имя: " + name);
+            console.log("Ник: " + nickname);
+            console.log("Бюджет: " + budget);
+            console.log("Валюта: " + currency);
+
+            sendToDiscord("Новый заказ", platform, name, nickname, budget, currency);
+
+            // Вывод сообщения "Готово"
+            alert("Готово");
+        }, 2000);
+    }
+
+    function sendToDiscord(title, platform, name, nickname, budget, currency) {
+        var webhookUrl = "https://discord.com/api/webhooks/1195613205993623585/fo9V3nGs8qJLlDPHSn8hDQaLOAh5SaScesAHE3B_gOXBo0HHyoHQHz2SB4p1CHQOGiXK";
+
+        // Формирование сообщения для отправки на Discord
+        var message = "**" + title + ":**\n" +
+                      "Платформа: " + platform + "\n" +
+                      "Имя: " + name + "\n" +
+                      "Ник: " + nickname + "\n" +
+                      "Бюджет: " + budget + " " + currency;
+
+        // Отправка данных на Discord
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: message }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Успешно отправлено на Discord:', data);
+        })
+        .catch((error) => {
+            console.error('Ошибка отправки на Discord:', error);
+        });
+    }
+</script>
+
+</body>
+</html>
